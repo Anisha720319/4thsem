@@ -1,0 +1,85 @@
+import requests
+import os
+import bs4
+os.makedirs('xkcd', exist_ok=True)
+for i in range(1, 10):
+    url = f'https://xkcd.com/{i}'
+    res = requests.get(url)
+    res.raise_for_status()
+    soup = bs4.BeautifulSoup(res.text, 'html.parser')
+    comic_elem = soup.select_one('#comic img')
+    comic_url = 'https:' + comic_elem['src']
+    print(f'Downloading comic {comic_url}...')
+    comic_name = os.path.basename(comic_url)
+    with open(os.path.join('xkcd', comic_name), 'wb') as f:
+        f.write(requests.get(comic_url).content)
+print('All comics downloaded successfully!')
+....
+import openpyxl
+wb = openpyxl.Workbook()
+ls, cs = wb.active, wb.create_sheet('Capital')
+ls.title = 'Language'
+data = [
+{'State': 'Karnataka', 'Language': 'Kannada','Capital': 'Bengaluru', 
+'Code': 'KA'},
+{'State': 'Telangana', 'Language': 'Telugu','Capital': 'Hyderabad', 
+'Code': 'TS'},
+{'State': 'Tamil Nadu', 'Language': 'Tamil', 'Capital': 'Chennai', 'Code': 
+'TN'}
+]
+ls.append(['State', 'Language', 'Code'])
+cs.append(['State', 'Capital', 'Code'])
+for row in data:
+    ls.append([row['State'], row['Language'], row['Code']])
+    cs.append([row['State'], row['Capital'], row['Code']])
+    wb.save('demo.xlsx')
+    code = input('Enter State Code: ').upper()
+for r in ls.iter_rows(min_row=2):
+    if r[2].value == code:
+        state, language = r[0].value, r[1].value
+for r in cs.iter_rows(min_row=2):
+    if r[2].value == code:
+        capital = r[1].value
+print(f'State: {state}\nCapital: {capital}\nLanguage: {language}')
+wb.close()
+..........
+class Palindrome:
+    def is_palindrome(self):
+        pass
+    
+class StringPalindrome(Palindrome):
+    def __init__(self, string):
+        self.string = string
+    def is_palindrome(self):
+        return self.string == self.string[::-1]
+    
+class IntegerPalindrome(Palindrome):
+    def __init__(self, number):
+        self.number = number
+    def is_palindrome(self):
+        return str(self.number) == str(self.number)[::-1]
+    
+string_input = input("Enter String to Check: ")
+string_palindrome = StringPalindrome(string_input)
+print(f"Given string is a Palindrome: {string_palindrome.is_palindrome()}")
+int_input = int(input("Enter Int to Check: "))
+int_palindrome = IntegerPalindrome(int_input)
+print(f"Given integer is a Palindrome: {int_palindrome.is_palindrome()}")
+8a
+
+...........
+from PyPDF2 import *
+num_pdfs = int(input("Enter the number of PDFs you want to combine: "))
+pdf_writer = PdfWriter()
+for i in range(num_pdfs):
+    path = input(f"Enter the full path to PDF {i+1}: ").strip('\'"')
+    with open(path, 'rb') as pdf:
+        pdf_reader = PdfReader(pdf)
+        pages = input(f"Enter specific page ranges for PDF {i+1} (e.g. 2-5,7,9-11): ")
+    page_nums = [int(x) for x in pages.split(',')]
+    for page_num in page_nums:
+        page = pdf_reader.pages[page_num - 1]
+        pdf_writer.add_page(page)
+with open('output.pdf', 'wb') as output:
+    pdf_writer.write(output)
+10
